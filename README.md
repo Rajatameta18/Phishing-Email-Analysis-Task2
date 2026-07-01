@@ -7,6 +7,7 @@ This project focuses on identifying indicators of compromise (IoCs) and social e
 ## Objective
 To develop email threat analysis capabilities, recognize domain spoofing tactics, and analyze core technical indicators that distinguish malicious emails from authentic business communications.
 
+
 ## 📊 Phishing Analysis Case Study Report
 
 ### 1. Phishing Sample Analyzed
@@ -15,25 +16,28 @@ To develop email threat analysis capabilities, recognize domain spoofing tactics
 - **Target Link Provided:** `http://login.netflix.com.account-verification-portal.net/secure/update`
 
 ### 2. Identified Phishing Indicators & Traits
-- **Domain Spoofing (Typosquatting):** The email purports to originate from Netflix, but the domain registration address is `netflx-billing-update.com`[cite: 2]. The deliberate spelling error (missing the letter 'i') is an attempt to deceive users inspecting the sender field cursorily[cite: 2].
+- **Domain Spoofing (Typosquatting):** The email purports to originate from Netflix, but the domain registration address is `netflx-billing-update.com`. The deliberate spelling error (missing the letter 'i') is an attempt to deceive users inspecting the sender field cursorily[cite: 2].
 - **Urgency and Coercion:** The text utilizes urgent call-to-action hooks ("instantly verify", "within 24 hours") and severe consequences ("permanent deletion") to manipulate the recipient into executing instructions without validation[cite: 2].
 - **Mismatched Hyperlink Architecture:** The target URL uses a subdomain layer string `login.netflix.com` to project legitimacy. However, the root domain is actually `account-verification-portal.net`, an unverified third-party destination controlled by the external sender[cite: 2].
 - **Generic Personalization:** The communication lacks genuine subscriber contextual identification details, relying on a mass-distribution placeholder ("Dear Customer").
 
 
 
-## 🛠️ Technical Header Analysis
-The raw email header was audited using the **Google Admin Toolbox MessageHeader** utility[cite: 2]. The tool parsed the routing metadata and flagged critical authentication failures[cite: 2]:
+## 🛠️ Technical Header Analysis (Google Admin Toolbox Messageheader)
+The raw email header was audited using the **Google Admin Toolbox Messageheader** utility[cite: 2]. The tool successfully parsed the routing metadata and flagged critical authentication failures as captured in **"Screenshot1.png"** and **"Screenshot2.png"**.
 
 ### Authentication Results Summary
 | Security Protocol | Status | Details / Analysis |
 | :--- | :--- | :--- |
-| **SPF (Sender Policy Framework)** | 🔴 **FAIL** | The sending server IP address (`198.51.100.42`) is not authorized to send emails on behalf of the domain `netflx-billing-update.com`. |
-| **DKIM (DomainKeys Identified Mail)** | 🔴 **FAIL** | Cryptographic signature verification failed, indicating the header details or email content was spoofed/altered. |
-| **DMARC (Domain-based Message Authentication)** | 🔴 **FAIL** | Because both SPF and DKIM failed, the email failed strict DMARC alignment rules (`p=REJECT`), confirming it is a fraudulent sender. |
+| **SPF (Sender Policy Framework)** | 🔴 **fail** | Status marked as `fail with IP Unknown!`, showing the message did not originate from a designated server. |
+| **DKIM (DomainKeys Identified Mail)** | 🔴 **fail** | Status marked as `fail with domain netflix.com;`, indicating cryptographic signature verification completely broke. |
+| **DMARC (Domain-based Message Authentication)**| 🔴 **fail** | Alignment check completely failed because both SPF and DKIM validations were invalid. |
 
-### Message Routing & Hops
-The tool successfully mapped out the delivery path of the message from the originating mail host (`mail-out.netflx-billing-update.com`) directly to the receiving MX handler gateway, registering the exact delivery latencies and transport security layer protocol used (`TLSv1.3`).
+### Message Routing & Delivery Latency
+According to the parsed hops detailed in **"Screenshot 2026-07-01 145943.png"**:
+- **Hop 0:** The message originated from `mail-out.netflx-billing-update.com.` and hit the Google gateway `mx.google.com` using the **ESMTPS** protocol with a delivery **delay of 12 seconds**.
+- **Internal Hops:** Followed internal Google SMTP routing protocols between local node addresses (`2002:a17...` and `2002:a05...`) before reaching the destination mailbox tray.
+
 
 ## 🔒 Recommended Actions & Mitigation
 1. **Immediate Deletion:** The email should be safely reported to the enterprise security team and permanently purged from the system[cite: 2].
