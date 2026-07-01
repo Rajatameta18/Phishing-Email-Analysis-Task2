@@ -1,0 +1,17 @@
+From: Netflix Security Team <support-alert@netflx-billing-update.com>
+To: target-user@example.com
+Subject: URGENT: Your Subscription is Suspended - Update Payment Immediately!
+Date: July 01, 2026, 02:30:15 PM IST
+
+Dear Customer,
+
+We were unable to process your monthly subscription fee because your credit card on file has expired or been declined. As a result, your access to streaming services has been temporarily suspended.
+
+To restore your account services, you must instantly verify your billing profile information by clicking the secure portal update link below:
+
+👉 http://login.netflix.com.account-verification-portal.net/secure/update
+
+Failure to update your billing profile details within 24 hours will lead to permanent deletion of your profile history and account preferences.
+
+Sincerely,
+The Netflix Accounts Team
